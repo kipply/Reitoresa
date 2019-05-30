@@ -8,9 +8,14 @@ import java.lang.Math;
 
 public class RayTracer {
   public static void main(String args[]) {
-    int nx = 800; 
-    int ny = 400; 
-    int ns = 400; 
+    System.out.println("Starting tracer"); 
+    long startTime = System.nanoTime();
+    long lastTime = startTime; 
+    long timeOnWriting = 0; 
+    long timeOnTracing = 0; 
+    int nx = 400; 
+    int ny = 200; 
+    int ns = 100; 
 
     BufferedWriter out; 
     try {
@@ -28,15 +33,21 @@ public class RayTracer {
       out.write(tos(ny)); 
       out.write("\n225\n"); 
 
+      timeOnWriting += System.nanoTime() - lastTime;
+      lastTime = System.nanoTime();
+
       Camera camera = new Camera(); 
 
       Form[] forms = new Form[4]; 
-      forms[0] = new Sphere(new Vector(0, 0, -1), 0.5, new Lambertian(new Vector(0.6, 0.2, 0.8))); 
-      forms[1] = new Sphere(new Vector(0, -100.5, -1), 100, new Lambertian(new Vector(0.2, 0.1, 0.8))); 
-      forms[2] = new Sphere(new Vector(1, 0, -1), 0.5, new Metal(new Vector(0.1, 0.1, 0.1))); 
-      forms[3] = new Sphere(new Vector(-1, 0, -1), 0.5, new Metal(new Vector(0.7, 0.7, 0.8))); 
+      forms[0] = new Sphere(new Vector(0, 0, -1), 0.5, new Lambertian(new Vector(0.8, 0.2, 0.8))); 
+      forms[1] = new Sphere(new Vector(0, -100.5, -1), 100, new Lambertian(new Vector(0.8, 0.8, 0.0))); 
+      forms[2] = new Sphere(new Vector(1, 0, -1), 0.5, new Metal(new Vector(0.8, 0.6, 0.8))); 
+      forms[3] = new Sphere(new Vector(-1, 0, -1), 0.5, new Dielectric(1.5)); 
 
       Scene world = new Scene(forms); 
+
+      timeOnTracing += System.nanoTime() - lastTime;
+      lastTime = System.nanoTime();
 
       for (int j = ny - 1; j >= 0; j--) {
         for (int i = 0; i < nx; i++) {
@@ -55,18 +66,28 @@ public class RayTracer {
           int ig = (int)(255.99 * colour.y()); 
           int ib = (int)(255.99 * colour.z()); 
 
+          timeOnTracing += System.nanoTime() - lastTime;
+          lastTime = System.nanoTime();
+
           out.write(tos(ir)); 
           out.write(" "); 
           out.write(tos(ig)); 
           out.write(" "); 
           out.write(tos(ib)); 
           out.write("\n"); 
+
+          timeOnWriting += System.nanoTime() - lastTime;
+          lastTime = System.nanoTime();
         }
       }
       out.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
+
+    System.out.println("Finished at " + (System.nanoTime() - startTime) / 1000000000.0);
+    System.out.println("Writing took " + timeOnWriting / 1000000000.0);
+    System.out.println("Tracing " + timeOnTracing / 1000000000.0);
   }
 
 

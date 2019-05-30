@@ -6,4 +6,13 @@ public class Utils {
     } while (point.length() * point.length() >= 1);
     return point; 
   }
+
+  public static double sqrt(double n) {
+    double half = 0.5d * n;
+    long i = Double.doubleToLongBits(n);
+    i = 0x5fe6ec85e7de30daL - (i >> 1);
+    n = Double.longBitsToDouble(i);
+    n *= (1.5d - n * n * n);
+    return n;
+  }
 }
