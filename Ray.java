@@ -1,6 +1,9 @@
 public class Ray {
   Vector A; 
   Vector B; 
+
+  Ray () { }
+
   Ray (Vector a, Vector b) {
     A = a; 
     B = b; 
@@ -16,5 +19,10 @@ public class Ray {
 
   public Vector pointAt(double t) {
     return A.add(B.multiply(t)); 
+  }
+
+  public void set(Ray r) {
+    A = r.A; 
+    B = r.B;
   }
 }

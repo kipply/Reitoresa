@@ -2,7 +2,7 @@ import java.lang.Math;
 
 public class Vector {
   private double[] vec = new double[3]; 
-
+  Vector () { }
   Vector (double i, double j, double k) {
     vec[0] = i; 
     vec[1] = j; 
@@ -39,7 +39,7 @@ public class Vector {
   }
 
   public Vector addEquals(Vector v) {
-    update(add(v));
+    set(add(v));
     return this; 
   }
 
@@ -48,7 +48,7 @@ public class Vector {
   }
 
   public Vector subtractEquals(Vector v) {
-    update(subtract(v));
+    set(subtract(v));
     return this; 
   }
 
@@ -57,7 +57,7 @@ public class Vector {
   }
 
   public Vector multiplyEquals(Vector v) {
-    update(multiply(v));
+    set(multiply(v));
     return this; 
   }
 
@@ -66,7 +66,7 @@ public class Vector {
   }
 
   public Vector multiplyEquals(double t) {
-    update(multiply(t));
+    set(multiply(t));
     return this; 
   }
 
@@ -75,7 +75,7 @@ public class Vector {
   }
 
   public Vector divideEquals(Vector v) {
-    update(divide(v));
+    set(divide(v));
     return this; 
   }
 
@@ -84,7 +84,7 @@ public class Vector {
   }
 
   public Vector divideEquals(double t) {
-    update(divide(t));
+    set(divide(t));
     return this; 
   }
 
@@ -109,7 +109,7 @@ public class Vector {
   }
 
   public Vector makeUnitVector() {
-    update(unitVector()); 
+    set(unitVector()); 
     return this; 
   }
 
@@ -117,7 +117,7 @@ public class Vector {
     System.out.println("< " + vec[0] + " " + vec[1] + " " + vec[2] + " >");
   }
 
-  private void update(Vector v) {
+  public void set(Vector v) {
     vec[0] = v.x(); 
     vec[1] = v.y(); 
     vec[2] = v.z(); 

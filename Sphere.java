@@ -1,10 +1,14 @@
+import java.lang.Math; 
+
 public class Sphere extends Form {
   Vector center; 
   double radius; 
+  Material material;
 
-  Sphere(Vector c, double r) {
+  Sphere(Vector c, double r, Material m) {
     center = c; 
-    radius = r;
+    radius = r; 
+    material = m; 
   }
 
   public boolean hit(Ray r, double minT, double maxT, FormHit hit) {
@@ -17,6 +21,7 @@ public class Sphere extends Form {
       double temp = (-b - Math.sqrt(discriminant)) / a;
       if (temp < maxT && temp > minT) {
         hit.t = temp; 
+        hit.mat = material; 
         hit.p = r.pointAt(temp); 
         hit.normal = (hit.p.subtract(center)).divide(radius); 
         return true; 
@@ -25,6 +30,7 @@ public class Sphere extends Form {
       if (temp < maxT && temp > minT) {
         hit.t = temp; 
         hit.p = r.pointAt(temp); 
+        hit.mat = material; 
         hit.normal = (hit.p.subtract(center)).divide(radius); 
         return true; 
       }
