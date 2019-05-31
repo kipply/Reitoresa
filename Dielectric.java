@@ -11,7 +11,7 @@ public class Dielectric extends Material {
     Vector outwardNormal = new Vector(); 
     Vector reflected = super.reflect(rayIn.direction(), hit.normal); 
     double niOverNt; 
-    attenuation.set(new Vector(1, 1, 1));
+    attenuation.set(new Vector(0.9, 0.9, 0.9));
     Vector refracted = new Vector(); 
 
     double reflectProb; 

@@ -13,8 +13,8 @@ public class RayTracer {
     long lastTime = startTime; 
     long timeOnWriting = 0; 
     long timeOnTracing = 0; 
-    int nx = 400; 
-    int ny = 200; 
+    int nx = 200; 
+    int ny = 100; 
     int ns = 100; 
 
     BufferedWriter out; 
@@ -36,10 +36,10 @@ public class RayTracer {
       timeOnWriting += System.nanoTime() - lastTime;
       lastTime = System.nanoTime();
 
-      Camera camera = new Camera(); 
+      Camera camera = new Camera(new Vector(-2 ,2, 1), new Vector(0, 0, -1), new Vector(0, 1, 0), 90, Double.valueOf(nx) / ny); 
 
       Form[] forms = new Form[4]; 
-      forms[0] = new Sphere(new Vector(0, 0, -1), 0.5, new Lambertian(new Vector(0.8, 0.2, 0.8))); 
+      forms[0] = new Sphere(new Vector(0, 0, -1), 0.5, new Dielectric(1.5)); 
       forms[1] = new Sphere(new Vector(0, -100.5, -1), 100, new Lambertian(new Vector(0.8, 0.8, 0.0))); 
       forms[2] = new Sphere(new Vector(1, 0, -1), 0.5, new Metal(new Vector(0.8, 0.6, 0.8))); 
       forms[3] = new Sphere(new Vector(-1, 0, -1), 0.5, new Dielectric(1.5)); 
