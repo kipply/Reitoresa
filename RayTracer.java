@@ -36,10 +36,15 @@ public class RayTracer {
       timeOnWriting += System.nanoTime() - lastTime;
       lastTime = System.nanoTime();
 
-      Camera camera = new Camera(new Vector(-2 ,2, 1), new Vector(0, 0, -1), new Vector(0, 1, 0), 90, Double.valueOf(nx) / ny); 
+
+      Vector lookFrom = new Vector(3, 3, 2); 
+      Vector lookAt = new Vector(0, 0, -1);
+      double focusDist = lookFrom.subtract(lookAt).length();
+      double aperture = 2;
+      Camera camera = new Camera(lookFrom, lookAt, new Vector(0, 1, 0), 20, Double.valueOf(nx) / ny, aperture, focusDist); 
 
       Form[] forms = new Form[4]; 
-      forms[0] = new Sphere(new Vector(0, 0, -1), 0.5, new Dielectric(1.5)); 
+      forms[0] = new Sphere(new Vector(0, 0, -1), 0.5, new Lambertian(new Vector(0.8, 0.8, 0.8))); 
       forms[1] = new Sphere(new Vector(0, -100.5, -1), 100, new Lambertian(new Vector(0.8, 0.8, 0.0))); 
       forms[2] = new Sphere(new Vector(1, 0, -1), 0.5, new Metal(new Vector(0.8, 0.6, 0.8))); 
       forms[3] = new Sphere(new Vector(-1, 0, -1), 0.5, new Dielectric(1.5)); 

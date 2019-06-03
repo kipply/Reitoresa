@@ -5,23 +5,38 @@ public class Camera {
   Vector horizontal; 
   Vector vertical; 
   Vector origin; 
+  Vector u; 
+  Vector w; 
+  Vector v;
+  double lensRadius;
 
-  Camera(Vector lookFrom, Vector lookAt, Vector vup, double vfov, double aspect) {
+  Camera(Vector lookFrom, Vector lookAt, Vector vup, double vfov, double aspect, double aperture, double focusDist) {
+    lensRadius = aperture / 2; 
     double theta = vfov * Math.PI / 180;
     double halfHeight = Math.tan(theta/2);
     double halfWidth = halfHeight * aspect;
 
     origin = lookFrom; 
-    Vector w = (lookFrom.subtract(lookAt)).unitVector(); 
-    Vector u = (vup.cross(w)).unitVector();
-    Vector v = w.cross(u);
+    w = (lookFrom.subtract(lookAt)).unitVector(); 
+    u = (vup.cross(w)).unitVector();
+    v = w.cross(u);
 
-    lowerLeft = origin.subtract(u.multiply(halfWidth)).subtract(v.multiply(halfHeight)).subtract(w);
-    horizontal = u.multiply(2 * halfWidth);
-    vertical = v.multiply(2 * halfHeight); 
+    lowerLeft = origin.subtract(u.multiply(halfWidth).multiply(focusDist)).subtract(v.multiply(halfHeight).multiply(focusDist)).subtract(w.multiply(focusDist));
+    horizontal = u.multiply(2 * halfWidth).multiply(focusDist);
+    vertical = v.multiply(2 * halfHeight).multiply(focusDist); 
   }
 
   public Ray getRay(double s, double t) {
-    return new Ray(origin, lowerLeft.add(horizontal.multiply(s)).add(vertical.multiply(t)).subtract(origin));
+    Vector rd = randomDiskUnit().multiply(lensRadius);
+    Vector offset = u.multiply(rd.x()).add(v.multiply(rd.y()));
+    return new Ray(origin.add(offset), lowerLeft.add(horizontal.multiply(s)).add(vertical.multiply(t)).subtract(origin).subtract(offset));
+  }
+
+  public static Vector randomDiskUnit() {
+    Vector p; 
+    do {
+      p = new Vector(Math.random(), Math.random(), 0).multiply(2).subtract(new Vector(1, 1, 0));
+    } while(p.dot(p) >= 1.0);
+    return p;
   }
 }

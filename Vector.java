@@ -94,7 +94,7 @@ public class Vector {
 
   public Vector cross(Vector v) {
     double x = vec[1] * v.z() - vec[2] * v.y();
-    double y = vec[0] * v.z() - vec[2] * v.x();
+    double y = -(vec[0] * v.z() - vec[2] * v.x());
     double z = vec[0] * v.y() - vec[1] * v.x();
     return new Vector(x, y, z);
   }
