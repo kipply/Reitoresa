@@ -15,4 +15,14 @@ public class Utils {
     n *= (1.5d - n * n * n);
     return n;
   }
+
+  public static AABB surroundingBox(AABB box0, AABB box1){
+    Vector small = new Vector(Math.min(box0.min().x(), box1.min().x()),
+              Math.min(box0.min().y(), box1.min().y()),
+              Math.min(box0.min().z(), box1.min().z()));
+    Vector big = new Vector(Math.max(box0.max().x(), box1.max().x()),
+              Math.max(box0.max().y(), box1.max().y()),
+              Math.max(box0.max().z(), box1.max().z()));
+    return new AABB(small,big);
+  }
 }

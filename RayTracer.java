@@ -12,10 +12,10 @@ public class RayTracer {
     long startTime = System.nanoTime();
     long lastTime = startTime; 
     long timeOnWriting = 0; 
-    long timeOnTracing = 0; 
-    int nx = 200; 
+    long timeOnTracing = 0;
+    int nx = 150; 
     int ny = 100; 
-    int ns = 100; 
+    int ns = 50; 
 
     BufferedWriter out; 
     try {
@@ -37,19 +37,14 @@ public class RayTracer {
       lastTime = System.nanoTime();
 
 
-      Vector lookFrom = new Vector(3, 3, 2); 
-      Vector lookAt = new Vector(0, 0, -1);
-      double focusDist = lookFrom.subtract(lookAt).length();
-      double aperture = 2;
-      Camera camera = new Camera(lookFrom, lookAt, new Vector(0, 1, 0), 20, Double.valueOf(nx) / ny, aperture, focusDist); 
+      Vector lookFrom = new Vector(13,4,3); 
+      Vector lookAt = new Vector(0, 0, 0);
+      double focusDist = 10;
+      double aperture = 0;
+      Camera camera = new Camera(lookFrom, lookAt, new Vector(0, 1, 0), 40, Double.valueOf(nx) / ny, aperture, focusDist, 0, 1); 
 
-      Form[] forms = new Form[4]; 
-      forms[0] = new Sphere(new Vector(0, 0, -1), 0.5, new Lambertian(new Vector(0.8, 0.8, 0.8))); 
-      forms[1] = new Sphere(new Vector(0, -100.5, -1), 100, new Lambertian(new Vector(0.8, 0.8, 0.0))); 
-      forms[2] = new Sphere(new Vector(1, 0, -1), 0.5, new Metal(new Vector(0.8, 0.6, 0.8))); 
-      forms[3] = new Sphere(new Vector(-1, 0, -1), 0.5, new Dielectric(1.5)); 
-
-      Scene world = new Scene(forms); 
+      // Scene world = Scene.randomSceneNode(); 
+      Scene world = Scene.randomScene(); 
 
       timeOnTracing += System.nanoTime() - lastTime;
       lastTime = System.nanoTime();
@@ -84,6 +79,7 @@ public class RayTracer {
           timeOnWriting += System.nanoTime() - lastTime;
           lastTime = System.nanoTime();
         }
+        // System.out.println(1.0*(ny - j) / ny * 100  + " % done");
       }
       out.close();
     } catch (IOException e) {
@@ -105,7 +101,7 @@ public class RayTracer {
     if (world.hit(r, 0.001, Double.MAX_VALUE, hit)) {
       Ray scattered = new Ray(); 
       Vector attenuation = new Vector(); 
-      if (depth < 50 && hit.mat.scatter(r, hit, attenuation, scattered)) {
+      if (depth < 10 && hit.mat.scatter(r, hit, attenuation, scattered)) {
         return colour(scattered, world, depth + 1).multiply(attenuation);
       } else {
         return new Vector(0, 0, 0);

@@ -37,4 +37,9 @@ public class Sphere extends Form {
     }
     return false; 
   }
+
+  public boolean boundingBox(double t0, double t1, AABB box) {
+    box.set(new AABB(center.subtract(new Vector(radius, radius, radius)), center.add(new Vector(radius, radius, radius))));
+    return true;
+  }
 }

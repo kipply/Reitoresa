@@ -33,6 +33,10 @@ public class Vector {
     return z(); 
   }
 
+  public double get(int n) {
+    return vec[n];
+  }
+
 
   public Vector add(Vector v) {
     return new Vector(vec[0] + v.x(), vec[1] + v.y(), vec[2] + v.z()); 

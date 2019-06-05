@@ -9,9 +9,14 @@ public class Camera {
   Vector w; 
   Vector v;
   double lensRadius;
+  double time0; 
+  double time1; 
 
-  Camera(Vector lookFrom, Vector lookAt, Vector vup, double vfov, double aspect, double aperture, double focusDist) {
+  Camera(Vector lookFrom, Vector lookAt, Vector vup, double vfov, double aspect, double aperture, double focusDist, double t0, double t1) {
     lensRadius = aperture / 2; 
+    time0 = t0; 
+    time1 = t1; 
+
     double theta = vfov * Math.PI / 180;
     double halfHeight = Math.tan(theta/2);
     double halfWidth = halfHeight * aspect;
@@ -29,7 +34,8 @@ public class Camera {
   public Ray getRay(double s, double t) {
     Vector rd = randomDiskUnit().multiply(lensRadius);
     Vector offset = u.multiply(rd.x()).add(v.multiply(rd.y()));
-    return new Ray(origin.add(offset), lowerLeft.add(horizontal.multiply(s)).add(vertical.multiply(t)).subtract(origin).subtract(offset));
+    double time = time0 + Math.random() * (time1 - time0);
+    return new Ray(origin.add(offset), lowerLeft.add(horizontal.multiply(s)).add(vertical.multiply(t)).subtract(origin).subtract(offset), time);
   }
 
   public static Vector randomDiskUnit() {
