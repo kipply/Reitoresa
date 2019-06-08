@@ -13,9 +13,9 @@ public class RayTracer {
     long lastTime = startTime; 
     long timeOnWriting = 0; 
     long timeOnTracing = 0;
-    int nx = 150; 
-    int ny = 100; 
-    int ns = 50; 
+    int nx = 400; 
+    int ny = 300; 
+    int ns = 400; 
 
     BufferedWriter out; 
     try {
@@ -44,7 +44,7 @@ public class RayTracer {
       Camera camera = new Camera(lookFrom, lookAt, new Vector(0, 1, 0), 40, Double.valueOf(nx) / ny, aperture, focusDist, 0, 1); 
 
       // Scene world = Scene.randomSceneNode(); 
-      Scene world = Scene.randomScene(); 
+      Scene world = Scene.lightBallScene(); 
 
       timeOnTracing += System.nanoTime() - lastTime;
       lastTime = System.nanoTime();
@@ -101,15 +101,14 @@ public class RayTracer {
     if (world.hit(r, 0.001, Double.MAX_VALUE, hit)) {
       Ray scattered = new Ray(); 
       Vector attenuation = new Vector(); 
-      if (depth < 10 && hit.mat.scatter(r, hit, attenuation, scattered)) {
-        return colour(scattered, world, depth + 1).multiply(attenuation);
+      Vector emitted = hit.mat.emitted(hit.u, hit.v, hit.p);
+      if (depth < 50 && hit.mat.scatter(r, hit, attenuation, scattered)) {
+        return colour(scattered, world, depth + 1).multiply(attenuation).add(emitted);
       } else {
-        return new Vector(0, 0, 0);
+        return emitted;
       }
     } else {
-      Vector unit = r.direction().unitVector(); 
-      double t = 0.5 * (unit.y() + 1.0);
-      return (new Vector(1, 1, 1).multiply(1 - t)).add(new Vector(0.5, 0.7, 1).multiply(t));
+      return new Vector(0, 0, 0);
     }
   }
 }

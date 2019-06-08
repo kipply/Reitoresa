@@ -7,7 +7,7 @@ public class Lambertian extends Material{
   public boolean scatter(Ray rayIn, FormHit hit, Vector attenuation, Ray scattered) {
     Vector target = hit.p.add((hit.normal).add(Utils.randomSpherePoint()));
     scattered.set(new Ray(hit.p, target.subtract(hit.p), rayIn.time()));
-    attenuation.set(albedo.value(0, 0, hit.p)); 
+    attenuation.set(albedo.value(hit.u, hit.v, hit.p)); 
     return true;
   }
 }

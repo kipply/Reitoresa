@@ -46,11 +46,11 @@ public class Scene extends Form{
   public static Scene randomScene() {
     int n = 500; 
     Form[] forms = new Form[n + 1]; 
-    Texture checker = new CheckerTexture(new SolidTexture(new Vector(0.2, 0.2, 0.1)), new SolidTexture(new Vector(0.5, 0.2, 0.1)));
+    Texture image = new ImageTexture("test.jpg");
+    forms[0] = new Sphere(new Vector(0, -1000, 0), 1000, new Lambertian(new SolidTexture(new Vector(Math.random() * Math.random(), Math.random() * Math.random(), Math.random() * Math.random()))));
+    forms[1] = new Sphere(new Vector(0, 2, 0), 2, new Lambertian(new ImageTexture("moon.jpg")));
 
-    forms[0] = new Sphere(new Vector(0, -1000, 0), 1000, new Lambertian(checker));
-
-    int i = 1; 
+    int i = 2; 
     for (int a = -5; a < 5; a++) {
       for (int b = -5; b < 5; b++) {
         double materialChoose = Math.random(); 
@@ -60,7 +60,7 @@ public class Scene extends Form{
           if (materialChoose < 0.8) {
             forms[i++] = new MovingSphere(center, center.add(new Vector(0, 0.5 * Math.random(), 0)), 0, 1, 0.2, new Lambertian(new SolidTexture(new Vector(Math.random() * Math.random(), Math.random() * Math.random(), Math.random() * Math.random()))));
           } else if (materialChoose < 0.95) {
-            forms[i++] = new Sphere(center, center.y(), new Metal(new Vector(0.5 * (1 + Math.random()), 0.5 * (1 + Math.random()), 0.5 * Math.random())));
+            forms[i++] = new Sphere(center, center.y(), new Lambertian(image));
           } else {
             forms[i++] = new Sphere(center, center.y(), new Dielectric(1.5));
           }
@@ -70,11 +70,21 @@ public class Scene extends Form{
     return new Scene(forms);
   }
 
+  public static Scene lightBallScene() {
+    Form[] forms = new Form[4]; 
+    forms[0] = new Sphere(new Vector(0, -1000, 0), 1000, new Lambertian(new ImageTexture("texture2.jpg")));
+    forms[1] = new Sphere(new Vector(0, 2, 0), 2, new Lambertian(new ImageTexture("moon.jpg")));
+    forms[2] = new Sphere(new Vector(0, 7, 0), 2, new DiffuseLight(new SolidTexture(new Vector(4, 4, 4))));
+    forms[3] = new XYRect(3, 5, 1, 3, -2, new DiffuseLight(new SolidTexture(new Vector(4, 4, 4))));
+
+    return new Scene(forms);
+  }
+
   public static BVHNode randomSceneNode() {
     int n = 500; 
     Form[] forms = new Form[n + 1]; 
-    Texture checker = new CheckerTexture(new SolidTexture(new Vector(0.2, 0.2, 0.1)), new SolidTexture(new Vector(0.5, 0.2, 0.1)));
-    forms[0] = new Sphere(new Vector(0, -1000, 0), 1000, new Lambertian(checker));
+    Texture image = new ImageTexture("texture2.jpg");
+    forms[0] = new Sphere(new Vector(0, -1000, 0), 1000, new Lambertian(image));
 
     int i = 1; 
     for (int a = -5; a < 5; a++) {

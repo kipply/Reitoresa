@@ -24,6 +24,7 @@ public class Sphere extends Form {
         hit.mat = material; 
         hit.p = r.pointAt(temp); 
         hit.normal = (hit.p.subtract(center)).divide(radius); 
+        getSphereUv(hit.normal, hit);
         return true; 
       }
       temp = (-b + Math.sqrt(discriminant)) / a;
@@ -32,6 +33,7 @@ public class Sphere extends Form {
         hit.p = r.pointAt(temp); 
         hit.mat = material; 
         hit.normal = (hit.p.subtract(center)).divide(radius); 
+        getSphereUv(hit.normal, hit);
         return true; 
       }
     }
@@ -41,5 +43,12 @@ public class Sphere extends Form {
   public boolean boundingBox(double t0, double t1, AABB box) {
     box.set(new AABB(center.subtract(new Vector(radius, radius, radius)), center.add(new Vector(radius, radius, radius))));
     return true;
+  }
+
+  private void getSphereUv(Vector p, FormHit hit){
+    double phi = Math.atan2(p.z(), p.x());
+    double theta = Math.asin(p.y());
+    hit.u = 1 - (phi + Math.PI) / (2 * Math.PI);
+    hit.v = (theta + Math.PI / 2) / Math.PI;
   }
 }

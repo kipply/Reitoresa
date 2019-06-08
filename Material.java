@@ -18,4 +18,8 @@ public abstract class Material {
   public Vector reflect(Vector v, Vector n) {
     return v.subtract(n.multiply(2 * v.dot(n)));
   }
+
+  public Vector emitted(double u, double v, Vector p) {
+    return new Vector(0, 0, 0);
+  }
 }
