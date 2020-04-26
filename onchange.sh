@@ -2,6 +2,7 @@
 
 !/bin/bash
 clear
-javac *.java
-java RayTracer
+find . -name "*.java" > sources.txt
+javac @sources.txt -d ./
+java RayTracer 
 echo "Updated"

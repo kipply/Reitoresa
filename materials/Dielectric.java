@@ -1,12 +1,25 @@
 import java.lang.Math; 
 
+/** Represents a dielectric or glass thing
+ * @author Carol Chen
+*/
 public class Dielectric extends Material {
   private double refractiveIndex; 
 
-  Dielectric(double ri) {
+  /**
+   * @param  ri refractive index
+   */
+  public Dielectric(double ri) {
     refractiveIndex = ri; 
   }
 
+  /**
+   * @param  rayIn       ray hitting the material
+   * @param  hit         information about the hit
+   * @param  attenuation attenuation of ray
+   * @param  scattered   variable to put scattered ray in
+   * @return             if scattering occurs
+   */
   public boolean scatter(Ray rayIn, FormHit hit, Vector attenuation, Ray scattered) {
     Vector outwardNormal = new Vector(); 
     Vector reflected = super.reflect(rayIn.direction(), hit.normal); 

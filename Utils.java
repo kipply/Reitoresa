@@ -1,4 +1,11 @@
+/** Class with general purpose utility functions
+ * @author Carol Chen
+*/
+
 public class Utils {
+  /**
+   * @return returns a random point for a sphere
+   */
   public static Vector randomSpherePoint() {
     Vector point; 
     do {
@@ -7,15 +14,11 @@ public class Utils {
     return point; 
   }
 
-  public static double sqrt(double n) {
-    double half = 0.5d * n;
-    long i = Double.doubleToLongBits(n);
-    i = 0x5fe6ec85e7de30daL - (i >> 1);
-    n = Double.longBitsToDouble(i);
-    n *= (1.5d - n * n * n);
-    return n;
-  }
-
+  /**
+   * @param box0 first box
+   * @param box1 second box
+   * @return Returns the AABB box of two boxes
+   */
   public static AABB surroundingBox(AABB box0, AABB box1){
     Vector small = new Vector(Math.min(box0.min().x(), box1.min().x()),
               Math.min(box0.min().y(), box1.min().y()),
@@ -23,6 +26,6 @@ public class Utils {
     Vector big = new Vector(Math.max(box0.max().x(), box1.max().x()),
               Math.max(box0.max().y(), box1.max().y()),
               Math.max(box0.max().z(), box1.max().z()));
-    return new AABB(small,big);
+    return new AABB(small, big);
   }
 }

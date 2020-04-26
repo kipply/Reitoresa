@@ -1,18 +1,33 @@
 import java.lang.Math; 
 
+/** Class to manage view angles and distances and focus blur
+ * @author Carol Chen
+*/
 public class Camera {
-  Vector lowerLeft; 
-  Vector horizontal; 
-  Vector vertical; 
-  Vector origin; 
-  Vector u; 
-  Vector w; 
-  Vector v;
-  double lensRadius;
-  double time0; 
-  double time1; 
+  public Vector lowerLeft; 
+  public Vector horizontal; 
+  public Vector vertical; 
+  public Vector origin; 
+  public Vector u; 
+  public Vector w; 
+  public Vector v;
+  public double lensRadius;
+  public double time0; 
+  public double time1; 
 
-  Camera(Vector lookFrom, Vector lookAt, Vector vup, double vfov, double aspect, double aperture, double focusDist, double t0, double t1) {
+  /**
+   * @param  lookFrom  vector looking from 
+   * @param  lookAt    vector looking at
+   * @param  vup       vertical distance up
+   * @param  vfov      angle from vertical onto scene
+   * @param  aspect    ascept ratio
+   * @param  aperture  aperture (contros amount of light)
+   * @param  focusDist distance to focus
+   * @param  t0        start time
+   * @param  t1        end time
+   * @return           [description]
+   */
+  public Camera(Vector lookFrom, Vector lookAt, Vector vup, double vfov, double aspect, double aperture, double focusDist, double t0, double t1) {
     lensRadius = aperture / 2; 
     time0 = t0; 
     time1 = t1; 
@@ -31,6 +46,11 @@ public class Camera {
     vertical = v.multiply(2 * halfHeight).multiply(focusDist); 
   }
 
+  /**
+   * @param  s point 1
+   * @param  t point 2
+   * @return   ray at that point
+   */
   public Ray getRay(double s, double t) {
     Vector rd = randomDiskUnit().multiply(lensRadius);
     Vector offset = u.multiply(rd.x()).add(v.multiply(rd.y()));
@@ -38,6 +58,9 @@ public class Camera {
     return new Ray(origin.add(offset), lowerLeft.add(horizontal.multiply(s)).add(vertical.multiply(t)).subtract(origin).subtract(offset), time);
   }
 
+  /**
+   * @return   Randomized ray vector from disk 
+   */
   public static Vector randomDiskUnit() {
     Vector p; 
     do {

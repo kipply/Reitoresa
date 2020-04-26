@@ -6,16 +6,21 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.lang.Math; 
 
+/** Main class to do ray tracing
+ * @author Carol Chen
+*/
 public class RayTracer {
+  private static int nx, ny; 
+
   public static void main(String args[]) {
     System.out.println("Starting tracer"); 
     long startTime = System.nanoTime();
     long lastTime = startTime; 
     long timeOnWriting = 0; 
     long timeOnTracing = 0;
-    int nx = 400; 
-    int ny = 300; 
-    int ns = 400; 
+    nx = 800; 
+    ny = 800; 
+    int ns = 1200; 
 
     BufferedWriter out; 
     try {
@@ -36,15 +41,8 @@ public class RayTracer {
       timeOnWriting += System.nanoTime() - lastTime;
       lastTime = System.nanoTime();
 
-
-      Vector lookFrom = new Vector(13,4,3); 
-      Vector lookAt = new Vector(0, 0, 0);
-      double focusDist = 10;
-      double aperture = 0;
-      Camera camera = new Camera(lookFrom, lookAt, new Vector(0, 1, 0), 40, Double.valueOf(nx) / ny, aperture, focusDist, 0, 1); 
-
-      // Scene world = Scene.randomSceneNode(); 
-      Scene world = Scene.lightBallScene(); 
+      Camera camera = planetarySceneCam();
+      Scene world = Scene.planetaryScene(); 
 
       timeOnTracing += System.nanoTime() - lastTime;
       lastTime = System.nanoTime();
@@ -61,7 +59,7 @@ public class RayTracer {
             colour.addEquals(colour(r, world, 0));
           }
           colour.divideEquals(ns);
-          colour = new Vector(Math.sqrt(colour.r()), Math.sqrt(colour.g()), Math.sqrt(colour.b()));
+          colour = new Vector(Math.min(1, Math.sqrt(colour.r())), Math.min(1, Math.sqrt(colour.g())), Math.min(1, Math.sqrt(colour.b())));
           int ir = (int)(255.99 * colour.x()); 
           int ig = (int)(255.99 * colour.y()); 
           int ib = (int)(255.99 * colour.z()); 
@@ -79,7 +77,7 @@ public class RayTracer {
           timeOnWriting += System.nanoTime() - lastTime;
           lastTime = System.nanoTime();
         }
-        // System.out.println(1.0*(ny - j) / ny * 100  + " % done");
+        System.out.println(1.0*(ny - j) / ny * 100  + " % done");
       }
       out.close();
     } catch (IOException e) {
@@ -87,8 +85,6 @@ public class RayTracer {
     }
 
     System.out.println("Finished at " + (System.nanoTime() - startTime) / 1000000000.0);
-    System.out.println("Writing took " + timeOnWriting / 1000000000.0);
-    System.out.println("Tracing " + timeOnTracing / 1000000000.0);
   }
 
 
@@ -102,13 +98,43 @@ public class RayTracer {
       Ray scattered = new Ray(); 
       Vector attenuation = new Vector(); 
       Vector emitted = hit.mat.emitted(hit.u, hit.v, hit.p);
-      if (depth < 50 && hit.mat.scatter(r, hit, attenuation, scattered)) {
+      if (depth < 1000 && hit.mat.scatter(r, hit, attenuation, scattered)) {
         return colour(scattered, world, depth + 1).multiply(attenuation).add(emitted);
       } else {
         return emitted;
       }
     } else {
       return new Vector(0, 0, 0);
+      // Vector unit = r.direction().unitVector(); 
+      // double t = 0.5 * (unit.y() + 1.0);
+      // return (new Vector(1, 1, 1).multiply(1 - t)).add(new Vector(0.5, 0.7, 1).multiply(t));
     }
+  }
+
+  private static Camera getCornellCam() {
+    Vector lookFrom = new Vector(278, 278, -800); 
+    Vector lookAt = new Vector(278, 278, 0);
+    double focusDist = lookFrom.subtract(lookAt).length();
+    double aperture = 0;
+    Camera camera = new Camera(lookFrom, lookAt, new Vector(0, 1, 0), 40, Double.valueOf(nx) / ny, aperture, focusDist, 0, 1); 
+    return camera; 
+  }
+
+  private static Camera getRandomSceneCam() {
+    Vector lookFrom = new Vector(13,4,3); 
+    Vector lookAt = new Vector(0, 0, 0);
+    double focusDist = 10;
+    double aperture = 0;
+    Camera camera = new Camera(lookFrom, lookAt, new Vector(0, 1, 0), 40, Double.valueOf(nx) / ny, aperture, focusDist, 0, 1); 
+    return camera; 
+  }
+
+  private static Camera planetarySceneCam() {
+    Vector lookFrom = new Vector(10, 14, 20); 
+    Vector lookAt = new Vector(0, 0, 0);
+    double focusDist = 10;
+    double aperture = 0;
+    Camera camera = new Camera(lookFrom, lookAt, new Vector(0, 1, 0), 50, Double.valueOf(nx) / ny, aperture, focusDist, 0, 1); 
+    return camera; 
   }
 }

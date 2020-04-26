@@ -1,16 +1,22 @@
 import java.util.Arrays;
 
+/** Bounding Volume heirarchy node for faster tracing
+ * @author Carol Chen
+*/
 public class BVHNode extends Scene {
-  public static final int CENTROID = 0;
-  public static final int SAH = 1;
-
-  AABB box;
-  Form left, right;
-  int lower, upper, axis;
-  int bmode = 0;
+  private AABB box;
+  private Form left, right;
+  private int lower, upper, axis;
+  private int bmode = 0;
 
   public BVHNode() {}
 
+  /** 
+   * @param  l     list of forms
+   * @param  n     number of forms
+   * @param  time0 start time
+   * @param  time1 end time
+   */
   public BVHNode(Form[] l, int n, double time0, double time1) {
     int axis = (int)(3.0 * Math.random()); 
     if (axis == 0) {
@@ -42,6 +48,13 @@ public class BVHNode extends Scene {
 
   }
 
+  /**
+   * Check if hit
+   * @param  r    incoming ray
+   * @param  minT max t value (provides wiggle room for angle)
+   * @param  maxT min t value
+   * @return      true if hit
+   */
   public boolean hit(Ray r, double minT, double maxT, FormHit hit){
     if (box.hit(r, minT, maxT)) { 
       FormHit leftHit = new FormHit();
@@ -69,6 +82,13 @@ public class BVHNode extends Scene {
     }
   }
 
+  /**
+   * update AABB form representing the bounding bax
+   * @param  t0  initial time
+   * @param  t1  end time
+   * @param  box box to set to bounding box
+   * @return     if valid
+   */
   public boolean boundingBox(double t0, double t1, AABB b){
     b.set(box);
     return true;
